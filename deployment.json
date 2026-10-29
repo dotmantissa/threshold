@@ -1,0 +1,27 @@
+{
+  "network": "studionet",
+  "rpc": "https://studio.genlayer.com/api",
+  "signer": "0xBC1399c55538eC034d4Da550C03c34Ae0C357f53",
+  "contracts": {
+    "tenancy_registry": {
+      "sha256": "602f7ee96d33c4c32c42c8a2d18474031c2eb313e6d2b2495706fdbf732b0fac",
+      "deploy_tx": "0xaab7264adb42db639fc968f4757e40e274fd8bf71564e90bc6b3ed9770e79036",
+      "address": "0xf4F93c5962Df927B342c4057389e50913d08390d"
+    },
+    "condition_court": {
+      "sha256": "8c081444881d7c4f9d8313a57187444e14fb51745ff5c67fa343cb8f24061533",
+      "deploy_tx": "0x3c25c37ea022052353af9a710ad1a744743dff39a2b61f96006604b99d1e4bc1",
+      "address": "0xE117b28EB5782f9e647A706fb412BBeb7b3b5D38"
+    },
+    "deposit_escrow": {
+      "sha256": "365104c8a3c3e06c98ea5ac0c8d1279f9fa6f3f8a4d9229672141ee4ea264b6e",
+      "deploy_tx": "0x575d07bbd2a117d27a3e46e93cb5e409337803bb28c78c6441c3572d5b212e28",
+      "address": "0x07B6336B24d12F34E751Fc00102cFe64F4c00Ec9"
+    }
+  },
+  "wiring": {
+    "registry": "0x83d237e113530ad3347254e21288a70c781733c7fb75eb433305c2eb9bfc3735",
+    "court": "0x396affb4232da8ae69fc7992df2b446314c6c3620df206f8c1ad5e2394f698cc"
+  },
+  "verified_at": "2026-10-29T15:30:51.453Z"
+}
