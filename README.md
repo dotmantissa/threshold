@@ -91,7 +91,7 @@ npm run contracts:test
 npm run contracts:smoke
 ```
 
-Direct tests cover every written contract, including the image and sandbox probes. Backend tests cover receipt binding, exact amounts, authorization rules and request boundaries. Test fixtures never become application records.
+Direct tests cover every written contract, including the image and sandbox probes. The harness uses the explicit GenVM v0.2.16 SDK archive, which contains the contracts’ pinned runner. Backend tests cover receipt binding, exact amounts, authorization rules and request boundaries. Test fixtures never become application records.
 
 Real email authentication and the authenticated empty dashboard have also been verified.
 

@@ -29,7 +29,9 @@ jobs:
       - run: python -m pip install genvm-linter
       - uses: actions/cache@v4
         with:
-          path: ~/.cache/genvm
-          key: genvm-${{ runner.os }}-threshold-v1
+          path: |
+            ~/.cache/genvm
+            ~/.cache/gltest-direct
+          key: genvm-${{ runner.os }}-threshold-v0216
       - run: npm run contracts:lint
       - run: pytest tests/direct -q --tb=short
