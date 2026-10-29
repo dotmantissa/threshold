@@ -1,0 +1,4 @@
+networks:
+  default: localnet
+  localnet: {}
+  studionet: {}
