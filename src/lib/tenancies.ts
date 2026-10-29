@@ -14,7 +14,7 @@ export function indexTenancy(row:TenancyRow,userId:string):Tenancy{
 }
 export async function fullTenancy(row:TenancyRow,userId:string){
  const sql=db();const live=row.chain_id?await readTenancy(row.chain_id):null;
- const operations=await sql`SELECT id,action,tx_hash,status,error,created_at FROM threshold_operations WHERE tenancy_id=${row.id} ORDER BY created_at DESC LIMIT 20`;
+ const operations=await sql`SELECT id,action,tx_hash,status,error,created_at,user_id=${userId} AS can_manage FROM threshold_operations WHERE tenancy_id=${row.id} ORDER BY created_at DESC LIMIT 20`;
  if(live)await sql`UPDATE threshold_tenancies SET snapshot=${JSON.stringify(live)}::jsonb WHERE id=${row.id}`;
  return {...indexTenancy(row,userId),...live,operations:operations as Operation[]};
 }

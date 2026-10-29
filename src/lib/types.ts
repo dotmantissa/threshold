@@ -16,5 +16,5 @@ export interface Verdict {status:'AWAITING_EVIDENCE'|'DECIDED'|'UNDETERMINED';it
 export interface EscrowAccount {deposit_atto:string;reserve_atto:string;appeal_bond_atto:string;appellant:string;settled:boolean;tenant_payout_atto?:string;landlord_payout_atto?:string;penalty_atto?:string;transfers?:string}
 export interface Tenancy {id:string;label:string;role:'tenant'|'landlord';chain_id:string|null;draft:TenancyDraft;creator_wallet:string;counterparty_wallet:string;created_at:string;record:TenancyRecord|null;verdict:Verdict|null;escrow:EscrowAccount|null;operations:Operation[]}
 export interface TenancyDraft {label:string;role:'tenant'|'landlord';counterparty_email:string;deposit:string;rent:string;start:string;end:string;condition_clause:string;items:InventoryItem[]}
-export interface Operation {id:string;action:string;tx_hash:string|null;status:'PREPARED'|'SUBMITTED'|'CONFIRMED'|'FAILED';error:string|null;created_at:string;call?:TransactionCall}
+export interface Operation {id:string;action:string;tx_hash:string|null;status:'PREPARED'|'SUBMITTED'|'CONFIRMED'|'FAILED';error:string|null;created_at:string;can_manage?:boolean;call?:TransactionCall}
 export interface TransactionCall {address:`0x${string}`;functionName:string;args:(string|number|bigint)[];value:string;integerArgs?:number[]}
