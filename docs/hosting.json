@@ -1,0 +1,14 @@
+{
+  "origin": "https://threshold-peace.vercel.app",
+  "network": "studionet",
+  "storage": "vercel",
+  "checks": [
+    "public application access",
+    "deployed contract addresses",
+    "persistent object storage configuration",
+    "anonymous access rejected",
+    "real authenticated account API",
+    "unrelated tenancy hidden"
+  ],
+  "verified_at": "2026-10-29T16:53:47.642Z"
+}
