@@ -1,0 +1,12 @@
+.env*
+!.env.example
+.secrets
+.storage
+TASKS.md
+AGENT.md
+AGENTS.md
+.venv
+.gltest_cache
+.pytest_cache
+__pycache__
+.git
