@@ -1,0 +1,10 @@
+import './proxy.mjs';
+import { config } from 'dotenv';
+import { neon } from '@neondatabase/serverless';
+import { readFileSync } from 'node:fs';
+config({path:'.env.local',quiet:true});
+if(!process.env.DATABASE_URL) throw Error('DATABASE_URL is required');
+const sql=neon(process.env.DATABASE_URL);
+const statements=readFileSync('db/001_initial.sql','utf8').split(';').map(s=>s.trim()).filter(Boolean);
+await sql.transaction(statements.map(s=>sql.query(s)));
+console.log('Threshold schema migrated successfully. No tenancy or evidence data was seeded.');

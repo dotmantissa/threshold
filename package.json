@@ -12,15 +12,23 @@
     "db:migrate": "tsx scripts/migrate.ts",
     "contracts:deploy": "tsx scripts/deploy.ts",
     "contracts:smoke": "tsx scripts/smoke.ts",
-    "contracts:lint": "genvm-lint check contracts/tenancy_registry.py && genvm-lint check contracts/condition_court.py && genvm-lint check contracts/deposit_escrow.py",
-    "contracts:test": "pytest tests/direct -v"
+    "contracts:lint": "genvm-lint check contracts/tenancy_registry.py && genvm-lint check contracts/condition_court.py && genvm-lint check contracts/deposit_escrow.py && genvm-lint check contracts/probes/image_probe.py && genvm-lint check contracts/probes/sandbox_probe.py",
+    "contracts:test": "pytest tests/direct -v",
+    "verify:receipts": "tsx scripts/verify-receipts.ts",
+    "review:browser": "node scripts/browser-review.mjs"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1159.0",
+    "@fontsource/ibm-plex-mono": "^5.3.0",
+    "@fontsource/source-sans-3": "^5.3.1",
+    "@mediapipe/tasks-vision": "^1.2.0",
     "@neondatabase/serverless": "^1.2.0",
     "@privy-io/node": "^0.37.0",
     "@privy-io/react-auth": "^3.51.0",
+    "@stripe/stripe-js": "^1.54.2",
+    "@vercel/blob": "^2.8.2",
     "genlayer-js": "^1.1.8",
+    "lossless-json": "^4.3.3",
     "lucide-react": "^1.64.0",
     "next": "^16.4.3",
     "react": "^19.3.1",
@@ -38,12 +46,18 @@
     "dotenv": "^18.0.9",
     "eslint": "^9.39.5",
     "eslint-config-next": "^16.4.3",
+    "node": "^22.23.4",
     "tsx": "^4.23.15",
-    "typescript": "^7.0.2",
+    "typescript": "~5.9.3",
     "vitest": "^4.1.12"
   },
   "type": "module",
   "engines": {
     "node": ">=22.13.0"
+  },
+  "overrides": {
+    "ws": "^8.22.0",
+    "decode-uri-component": "^0.5.1",
+    "uuid": "^11.1.1"
   }
 }
