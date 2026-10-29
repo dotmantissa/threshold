@@ -1,0 +1,32 @@
+{
+  "network": "studionet",
+  "checks": [
+    "deployed source equality",
+    "contract schema",
+    "real Studio faucet",
+    "two party registration",
+    "agreement acceptance",
+    "immutable arrival commitment",
+    "other party acknowledgement",
+    "native penalty reserve",
+    "native deposit custody",
+    "wired court view"
+  ],
+  "funded": true,
+  "register": "0x0bbb0ae4348b27791f6a01e2474a5c6c9b42cddc98807dcac6548818d930b1bf",
+  "tenancy_id": "1",
+  "accept": "0x51db3881ca503ee9cce48ee132219a19c57423c8814492e940ee7a6a5460e29c",
+  "arrival": "0x6b77d3532828da54f1967479db0c17863a3dfe474d024494989022ef1e80ba79",
+  "acknowledge": "0x0a7658ec734c09e99bac66d14259e688aa765b111b6a4152a3cbd064717ab54a",
+  "reserve": "0xb5cbde9a0f52e6f47c23367ad2ba9e10caec0eca1d28d3d50ac5647ae8cd4cc9",
+  "deposit": "0xb93ba5d29dd90cd2a1899ac20217d79110834c038e2a7abb2d43661dd35ec863",
+  "account": {
+    "appeal_bond_atto": "0",
+    "appellant": "",
+    "deposit_atto": "10000000000000000000",
+    "funded_at": "2026-10-29T16:02:19.763306+00:00",
+    "reserve_atto": "20000000000000000000",
+    "settled": false
+  },
+  "verified_at": "2026-10-29T16:02:35.324Z"
+}

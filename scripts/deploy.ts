@@ -16,7 +16,7 @@ let state:Deployment=existsSync(path)?JSON.parse(readFileSync(path,'utf8')):{net
 if(process.argv.includes('--fresh')&&existsSync(path)){mkdirSync('docs/deployments',{recursive:true});writeFileSync('docs/deployments/'+Date.now()+'.json',JSON.stringify(state,null,2));state={...state,contracts:{},wiring:{}}}
 const save=()=>writeFileSync(path,JSON.stringify(state,null,2)+'\n');
 async function wait(hash:`0x${string}`,name:string){
- const receipt=await client.waitForTransactionReceipt({hash,status:TransactionStatus.ACCEPTED,interval:5000,retries:60});
+ const receipt=await client.waitForTransactionReceipt({hash:hash as Parameters<typeof client.waitForTransactionReceipt>[0]["hash"],status:TransactionStatus.ACCEPTED,interval:5000,retries:60});
  mkdirSync('.storage/receipts',{recursive:true});writeFileSync('.storage/receipts/'+name+'.json',JSON.stringify(receipt,null,2));
  if(!executionSucceeded(receipt as NetworkReceipt))throw Error('Execution failed for '+name+'; inspect restricted local receipt');
  return receipt;
