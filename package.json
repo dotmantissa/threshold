@@ -1,0 +1,21 @@
+{
+  "name": "threshold",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint . --max-warnings 0",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "db:migrate": "tsx scripts/migrate.ts",
+    "contracts:deploy": "tsx scripts/deploy.ts",
+    "contracts:smoke": "tsx scripts/smoke.ts",
+    "contracts:lint": "genvm-lint check contracts/tenancy_registry.py && genvm-lint check contracts/condition_court.py && genvm-lint check contracts/deposit_escrow.py",
+    "contracts:test": "pytest tests/direct -v"
+  },
+  "dependencies": {
+    "@privy-io/node": "^0.37.0"
+  }
+}
