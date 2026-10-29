@@ -1,0 +1,18 @@
+import {chromium,firefox} from '@playwright/test';
+import fs from 'node:fs';
+const engine=process.env.REVIEW_BROWSER==='firefox'?firefox:chromium;
+const browser=await engine.launch({headless:true,...(engine===chromium?{channel:'chromium',ignoreDefaultArgs:['--disable-dev-shm-usage','--enable-features=CDPScreenshotNewSurface'],args:['--no-sandbox']}:{})});
+const page=await browser.newPage({viewport:{width:1440,height:1000}});
+const base=process.env.REVIEW_URL||'http://localhost:3001';
+const errors=[];page.on('pageerror',error=>errors.push(error.message));
+await page.goto(base,{waitUntil:'domcontentloaded',timeout:60000});
+await page.waitForTimeout(7000);
+fs.mkdirSync('.storage/review',{recursive:true});
+await page.screenshot({timeout:60000,animations:'disabled',path:'.storage/review/desktop-light.png',fullPage:true});
+console.log('Desktop title:',await page.title());console.log('Visible text:',(await page.locator('main').innerText()).slice(0,600));
+await page.getByRole('button',{name:'Switch to dark mode'}).click();await page.screenshot({timeout:60000,animations:'disabled',path:'.storage/review/desktop-dark.png',fullPage:true});
+await page.setViewportSize({width:390,height:844});await page.screenshot({timeout:60000,animations:'disabled',path:'.storage/review/mobile-dark.png',fullPage:true});
+console.log('Mobile overflow:',await page.evaluate(()=>document.documentElement.scrollWidth>window.innerWidth));
+await page.getByRole('button',{name:'Switch to light mode'}).last().click();await page.screenshot({timeout:60000,animations:'disabled',path:'.storage/review/mobile-light.png',fullPage:true});
+await page.goto(base+'/guide',{waitUntil:'domcontentloaded'});await page.waitForTimeout(1000);await page.screenshot({timeout:60000,animations:'disabled',path:'.storage/review/mobile-guide.png',fullPage:true});
+console.log('Browser errors:',errors);await browser.close();

@@ -1,0 +1,15 @@
+import {firefox} from '@playwright/test';
+import fs from 'node:fs';
+const auth=JSON.parse(fs.readFileSync('.secrets/auth-response.json','utf8'));
+const browser=await firefox.launch({headless:true});const page=await browser.newPage({viewport:{width:1440,height:1000}});const base=process.env.REVIEW_URL||'http://localhost:3001';
+const errors=[];page.on('pageerror',error=>errors.push(error.message));
+await page.addInitScript(({token,refresh,pat})=>{localStorage.setItem('privy:token',JSON.stringify(token));localStorage.setItem('privy:refresh_token',JSON.stringify(refresh));localStorage.setItem('privy:pat',JSON.stringify(pat))},{token:auth.token,refresh:auth.refresh_token,pat:auth.privy_access_token});
+await page.goto(base,{waitUntil:'domcontentloaded'});await page.getByRole('button',{name:'Create your first tenancy'}).waitFor({timeout:90000});
+await page.getByRole('button',{name:'Create your first tenancy'}).click();await page.getByRole('dialog').waitFor();
+console.log('Wizard dialog accessible name present',Boolean(await page.getByRole('dialog').getAttribute('aria-labelledby')));
+await page.screenshot({path:'.storage/review/tenancy-wizard.png',fullPage:true});
+await page.keyboard.press('Escape');console.log('Escape closes dialog',await page.getByRole('dialog').count()===0);
+await page.setViewportSize({width:390,height:844});await page.getByRole('button',{name:'Open navigation'}).click();console.log('Mobile menu expanded',await page.getByRole('button',{name:'Close navigation'}).getAttribute('aria-expanded'));
+await page.getByRole('link',{name:'The photo guide',exact:true}).first().click();await page.getByRole('heading',{name:'A photo worth keeping.'}).waitFor();
+console.log('Guide overflow',await page.evaluate(()=>document.documentElement.scrollWidth>window.innerWidth));console.log('Interaction page errors',errors.length);
+await browser.close();
