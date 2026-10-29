@@ -1,0 +1,9 @@
+{
+  "network": "studionet",
+  "signer": "0xBC1399c55538eC034d4Da550C03c34Ae0C357f53",
+  "deployTx": "0xaf1993c8afefb6b9b860c57fe97576c9094d1dbcfd78805bf1359cf08086230f",
+  "address": "0x84c5475e308300FC59b4285Afbc6DCe98DFB016e",
+  "compareTx": "0xdec113017baf18ec6dbfabdd3e410ffd2051d8db7c0b2e4c2c43651760a017d8",
+  "result": "{\"classification\": \"PRE_EXISTING\", \"reason\": \"The arrival and departure photos appear identical, showing the same kitchen scene with no visible changes or damage.\"}",
+  "status": 5
+}
