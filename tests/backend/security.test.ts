@@ -33,7 +33,7 @@ describe('tenancy authorization and validation',()=>{
  it('requires all inventory photos exactly once',()=>expect(()=>prepareCall(context,'commit_arrival',[])).toThrow('every item'));
  it('rejects claims referencing unrelated inventory',()=>expect(()=>prepareCall({...context,userWallet:landlord},'notice',undefined,[{item_id:'other',claimed_atto:'1',reason:'New damage reported'}])).toThrow('claim items'));
  it('requires a closed appeal window for settlement',()=>expect(()=>prepareCall(context,'settle')).toThrow('appeal window'));
- it('requires the appellant to request rehearing',()=>expect(()=>prepareCall({...context,escrow:{deposit_atto:'10',reserve_atto:'0',appeal_bond_atto:'1',appellant:landlord,settled:false}},'rehear')).toThrow('bonded this appeal'));
+ it('lets the counterparty complete a bonded rehearing',()=>expect(prepareCall({...context,escrow:{deposit_atto:'10',reserve_atto:'0',appeal_bond_atto:'1',appellant:landlord,settled:false}},'rehear').functionName).toBe('rehear'));
  it('normalizes counterpart email',()=>expect(draftSchema.parse(draft).counterparty_email).toBe('owner@example.com'));
  it('rejects an invalid calendar date',()=>expect(draftSchema.safeParse({...draft,start:'2026-02-30'}).success).toBe(false));
  it('rejects excessive deposits',()=>expect(draftSchema.safeParse({...draft,deposit:'16'}).success).toBe(false));

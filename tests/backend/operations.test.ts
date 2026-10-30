@@ -13,13 +13,17 @@ const params={params:Promise.resolve({id})};
 beforeEach(()=>{state.sql.mockReset();state.read.mockReset();vi.restoreAllMocks()});
 function network(status=5){return '{"result":{"status":'+status+',"from_address":"'+state.user.wallet+'","to_address":"'+call.address+'","value":10000000000000000001,"data":{"calldata":"'+Buffer.from(abi.calldata.encode(abi.calldata.makeCalldataObject(call.functionName,call.args,undefined))).toString('base64')+'"},"consensus_data":{"leader_receipt":[{"execution_result":"SUCCESS"}]}}}'}
 describe('persistent operation recovery',()=>{
+ it('keeps accepted execution distinct from finality and continues polling',async()=>{
+ state.sql.mockResolvedValueOnce([op]).mockResolvedValueOnce([{id}]).mockResolvedValue([]);vi.spyOn(globalThis,'fetch').mockResolvedValue(new Response(network(5)));
+ const response=await POST(request({tx_hash:hash}),params);expect(await response.json()).toMatchObject({status:'ACCEPTED'});expect(state.read).not.toHaveBeenCalled();
+ });
  it('keeps a submitted receipt pending until network acceptance',async()=>{
   state.sql.mockResolvedValueOnce([op]).mockResolvedValueOnce([{id}]);vi.spyOn(globalThis,'fetch').mockResolvedValue(new Response(network(3)));
   const response=await POST(request({tx_hash:hash}),params);expect(response.status).toBe(200);expect(await response.json()).toMatchObject({status:'SUBMITTED',tx_hash:hash});expect(state.read).not.toHaveBeenCalled();
  });
- it('reconciles exact receipt and authoritative snapshot before confirmation',async()=>{
-  state.sql.mockResolvedValueOnce([op]).mockResolvedValueOnce([{id}]).mockResolvedValue([]);state.read.mockResolvedValue({record:{id:'7'},verdict:{status:'AWAITING_EVIDENCE'},escrow:{deposit_atto:call.value}});vi.spyOn(globalThis,'fetch').mockResolvedValue(new Response(network()));
-  const response=await POST(request({tx_hash:hash}),params);expect(response.status).toBe(200);expect(await response.json()).toMatchObject({status:'CONFIRMED',chain_id:'7'});expect(state.read).toHaveBeenCalledWith('7');
+ it('reconciles exact receipt and authoritative snapshot after finality',async()=>{
+  state.sql.mockResolvedValueOnce([op]).mockResolvedValueOnce([{id}]).mockResolvedValue([]);state.read.mockResolvedValue({record:{id:'7'},verdict:{status:'AWAITING_EVIDENCE'},escrow:{deposit_atto:call.value}});vi.spyOn(globalThis,'fetch').mockResolvedValue(new Response(network(7)));
+  const response=await POST(request({tx_hash:hash}),params);expect(response.status).toBe(200);expect(await response.json()).toMatchObject({status:'FINALIZED',chain_id:'7'});expect(state.read).toHaveBeenCalledWith('7',undefined);
  });
  it('cannot overwrite an already bound hash',async()=>{
   state.sql.mockResolvedValueOnce([{...op,tx_hash:'0x'+'b'.repeat(64)}]);const fetch=vi.spyOn(globalThis,'fetch');const response=await POST(request({tx_hash:hash}),params);expect(response.status).toBe(409);expect(fetch).not.toHaveBeenCalled();

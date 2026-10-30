@@ -2,7 +2,7 @@ import {toAtto,sameAddress} from './amounts';
 import type {TenancyDraft,TransactionCall,TenancyRecord,EscrowAccount,Verdict,EvidenceImage,Claim} from './types';
 import {HttpError} from './http';
 export interface ActionContext {chainId:string|null;draft:TenancyDraft;creatorWallet:string;counterpartyWallet:string;userWallet:string;record:TenancyRecord|null;escrow:EscrowAccount|null;verdict:Verdict|null;contracts:{registry:`0x${string}`;court:`0x${string}`;escrow:`0x${string}`}}
-export function prepareCall(context:ActionContext,action:string,images?:EvidenceImage[],claims?:Claim[]):TransactionCall{
+export function prepareCall(context:ActionContext,action:string,images?:EvidenceImage[],claims?:Claim[],departureDate?:string):TransactionCall{
  const {chainId,draft,creatorWallet,counterpartyWallet,userWallet,record,escrow,verdict,contracts}=context;
  const tenant=draft.role==='tenant'?creatorWallet:counterpartyWallet;
  const landlord=draft.role==='landlord'?creatorWallet:counterpartyWallet;
@@ -29,7 +29,7 @@ export function prepareCall(context:ActionContext,action:string,images?:Evidence
  }
  if(action==='reserve'){
   if(role!=='landlord')throw new HttpError(403,'The landlord funds the penalty reserve.');
-  return call(contracts.escrow,'fund_reserve',[chainId],(2n*BigInt(record.deposit_atto)).toString());
+  return call(contracts.escrow,'fund_reserve',[chainId],(2n*BigInt(record.deposit_atto)-BigInt(escrow?.reserve_atto||'0')).toString());
  }
  if(action==='notice'){
   if(role!=='landlord'||!claims)throw new HttpError(403,'The landlord prepares the itemised notice.');
@@ -42,11 +42,23 @@ export function prepareCall(context:ActionContext,action:string,images?:Evidence
   return call(contracts.escrow,'bond_appeal',[chainId],(BigInt(record.deposit_atto)/100n||1n).toString());
  }
  if(action==='rehear'){
-  if(!escrow||!sameAddress(escrow.appellant,userWallet))throw new HttpError(403,'The person who bonded this appeal can request its review.');
+  if(!escrow||escrow.appeal_bond_atto==='0')throw new HttpError(409,'Fund an appeal bond before requesting a review.');
   return call(contracts.court,'rehear',[chainId]);
  }
+ if(action==='refund_reserve')return {...call(contracts.escrow,'refund_unused_reserve',[chainId]),expectedPayout:escrow?.reserve_atto||'0'};
+ if(action==='pay_penalty'){
+  if(role!=='landlord'||!escrow?.penalty_due_atto||escrow.penalty_due_atto==='0')throw new HttpError(409,'No outstanding penalty to pay.');
+  return call(contracts.escrow,'pay_penalty',[chainId],escrow.penalty_due_atto);
+ }
+ if(action==='propose_departure'||action==='acknowledge_departure'){
+  const day=departureDate||record.departure_proposal?.date;
+  if(!day)throw new HttpError(400,'Choose the agreed early departure date.');
+  return call(contracts.registry,action,[chainId,day]);
+ }
  if(action==='settle'){
-  if(verdict?.status!=='DECIDED'||!verdict.release_after||Date.now()<=Date.parse(verdict.release_after))throw new HttpError(409,'The verdict must be decided and its appeal window closed before release.');
+  const expired=Date.now()>=Date.parse((record.departure_date||record.end)+'T00:00:00Z')+36*86400000;
+  if(!expired&&(verdict?.status!=='DECIDED'||!verdict.release_after||Date.now()<Date.parse(verdict.release_after)))throw new HttpError(409,'Wait for the appeal window or resolution deadline before release.');
+  if(!expired&&escrow?.appeal_deadline&&escrow.appeal_bond_atto!=='0'&&!verdict?.appeal&&Date.now()<Date.parse(escrow.appeal_deadline))throw new HttpError(409,'Complete the rehearing or wait for its deadline.');
   return call(contracts.escrow,'settle',[chainId]);
  }
  throw new HttpError(400,'This action is not available.');

@@ -15,14 +15,14 @@ export function useThreshold(){
  const confirm=useCallback(async(id:string,hash:string)=>{
   const deadline=Date.now()+240000;
   while(Date.now()<deadline){
-   const result=await api<{status:string;error?:string}>('/api/operations/'+id,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({tx_hash:hash})});
-   if(result.status==='CONFIRMED'){localStorage.removeItem('threshold-pending-'+id);return}
+   const result=await api<{status:string;error?:string}>('/api/operations/'+id,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(hash?{tx_hash:hash}:{})});
+   if(['FINALIZED','COMPLETE'].includes(result.status)){localStorage.removeItem('threshold-pending-'+id);return}
    if(result.status==='FAILED'){localStorage.removeItem('threshold-pending-'+id);throw Error(result.error||'This action could not be completed.')}
    await new Promise(resolve=>setTimeout(resolve,6000));
   }
   throw Error('The network is still reviewing this action. Its receipt is saved in your activity record. You can return later.');
  },[api]);
- const act=useCallback(async(tenancyId:string,action:string,payload:{images?:EvidenceImage[];claims?:Claim[]}={})=>{
+ const act=useCallback(async(tenancyId:string,action:string,payload:{images?:EvidenceImage[];claims?:Claim[];departure_date?:string}={})=>{
   if(progress)throw Error('Please let the current action finish.');
   const wallet=wallets.find(w=>w.walletClientType==='privy');if(!wallet)throw Error('Your account is getting ready. Please try again in a moment.');
   let operation:Operation&{call:TransactionCall}|undefined;let submitted=false;
@@ -64,7 +64,7 @@ export function useThreshold(){
    const args=call.args.map((arg,index)=>call.integerArgs?.includes(index)?BigInt(String(arg)):arg);
    const hash=await client.writeContract({address:call.address,functionName:call.functionName,args,value:BigInt(call.value)});
    submitted=true;localStorage.setItem('threshold-pending-'+operation.id,hash);
-   setProgress('Waiting for the network’s receipt');await confirm(operation.id,hash);
+   setProgress('Waiting for network finalisation');await confirm(operation.id,hash);
   }catch(error){
    if(operation&&!submitted)await api('/api/operations/'+operation.id,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({cancel:true})}).catch(()=>undefined);
    throw error;
@@ -73,7 +73,7 @@ export function useThreshold(){
  const resume=useCallback(async(operation:Operation)=>{
   const hash=operation.tx_hash||localStorage.getItem('threshold-pending-'+operation.id);
   if(!hash)throw Error('This action was not submitted. You can dismiss it and start again.');
-  try{setProgress('Checking the saved receipt');await confirm(operation.id,hash)}finally{setProgress(null)}
+  try{setProgress('Checking the saved receipt');await confirm(operation.id,operation.can_manage?hash:'')}finally{setProgress(null)}
  },[confirm]);
  const dismiss=useCallback(async(operation:Operation)=>{
   if(operation.tx_hash||localStorage.getItem('threshold-pending-'+operation.id))throw Error('A saved receipt exists. Check it before dismissing this action.');
