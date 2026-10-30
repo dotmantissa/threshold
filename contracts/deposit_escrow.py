@@ -6,7 +6,9 @@ from datetime import datetime, timedelta
 def now() -> datetime:
     return datetime.fromisoformat(gl.message_raw["datetime"].replace("Z", "+00:00"))
 
-@gl.contract_interface
+# Embedded wallets are EOAs on the chain layer. The EVM interface sends an
+# external value transfer at finalization; native IC messages require a contract.
+@gl.evm.contract_interface
 class Recipient:
     class View:
         pass
