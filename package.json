@@ -13,7 +13,7 @@
     "contracts:deploy": "tsx scripts/deploy.ts",
     "contracts:smoke": "tsx scripts/smoke.ts",
     "contracts:lint": "genvm-lint check contracts/tenancy_registry.py && genvm-lint check contracts/condition_court.py && genvm-lint check contracts/deposit_escrow.py && genvm-lint check contracts/probes/image_probe.py && genvm-lint check contracts/probes/sandbox_probe.py",
-    "contracts:test": "pytest tests/direct -v",
+    "contracts:test": "pytest tests/direct tests/integration -v",
     "verify:receipts": "tsx scripts/verify-receipts.ts",
     "review:browser": "node scripts/browser-review.mjs"
   },

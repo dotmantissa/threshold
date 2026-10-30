@@ -34,4 +34,4 @@ jobs:
             ~/.cache/gltest-direct
           key: genvm-${{ runner.os }}-threshold-v0216
       - run: npm run contracts:lint
-      - run: pytest tests/direct -q --tb=short
+      - run: pytest tests/direct tests/integration -q --tb=short

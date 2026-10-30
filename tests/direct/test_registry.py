@@ -5,11 +5,15 @@ ITEM = {"id": "floor", "name": "Living room carpet", "class": "carpet", "age_mon
 CLAUSE = "Return the property in its recorded condition allowing for ordinary wear."
 
 @pytest.fixture
-def registry(direct_vm, direct_deploy, direct_alice, direct_bob, direct_charlie):
+def registry(direct_vm, direct_deploy, direct_alice, direct_bob, direct_charlie, monkeypatch):
     direct_vm.warp("2026-10-29T10:00:00Z")
     direct_vm.sender = direct_alice
+    direct_vm.mock_web(r"example\.org", {"status": 200, "body": "Published carpet replacement price and paid repair receipt."})
     c = direct_deploy("contracts/tenancy_registry.py")
     c.wire("0x"+direct_bob.hex(), "0x"+direct_charlie.hex())
+    from genlayer import gl
+    from types import SimpleNamespace
+    monkeypatch.setattr(gl, "get_contract_at", lambda _: SimpleNamespace(view=lambda: SimpleNamespace(get_account=lambda _: {"settled": False})))
     return c
 
 @pytest.fixture
@@ -99,6 +103,63 @@ def test_departure_notice_lifecycle(registry,create,direct_vm,direct_alice,direc
     registry.commit_evidence(tid,"move_out",manifests())
     with direct_vm.expect_revert("Landlord"):registry.submit_notice(tid,"[]")
     direct_vm.sender=direct_bob
-    registry.submit_notice(tid,json.dumps([{"item_id":"floor","claimed_atto":"50","reason":"There is a large new tear in the carpet."}]))
+    registry.submit_notice(tid,json.dumps([{"item_id":"floor","claimed_atto":"50","reason":"There is a large new tear in the carpet.","expenditure_atto":"50","expenditure_reference_url":"https://example.org/receipt"}]))
     assert registry.get_tenancy(tid)["notice"]["submitted_at"].startswith("2027-10-29")
     with direct_vm.expect_revert("one notice"):registry.submit_notice(tid,"[]")
+
+@pytest.mark.parametrize('change',[{'deposit_atto':900},{'rent_atto':1100},{'end':'2028-10-29'},{'tenant':'0x'+'9'*40},{'items_json':json.dumps([{**ITEM,'replacement_atto':'2000'}])}])
+def test_complete_agreement_fingerprint(registry,create,direct_vm,direct_bob,change):
+    first=create(); original=registry.get_tenancy(first)['agreement_hash']
+    if 'tenant' in change: direct_vm.sender=direct_bob
+    second=create(**change)
+    assert registry.get_tenancy(second)['agreement_hash'] != original
+
+def test_reference_snapshot_is_hashed_and_immutable(registry,create,direct_vm):
+    tid=create(); item=registry.get_tenancy(tid)['items'][0]
+    import hashlib
+    assert item['cost_reference_sha256']==hashlib.sha256(item['cost_reference_text'].encode()).hexdigest()
+    direct_vm.clear_mocks(); direct_vm.mock_web(r'example\.org',{'status':200,'body':'A changed replacement price.'})
+    changed=create()
+    assert registry.get_tenancy(tid)['items'][0]==item
+    assert registry.get_tenancy(changed)['agreement_hash']!=registry.get_tenancy(tid)['agreement_hash']
+
+def test_departure_sets_can_be_corrected_independently(registry,create,direct_vm,direct_alice,direct_bob):
+    tid=accept(registry,create,direct_vm,direct_bob)
+    registry.commit_evidence(tid,'move_in',manifests()); direct_vm.sender=direct_alice
+    registry.acknowledge_arrival(tid,registry.get_tenancy(tid)['move_in']['manifest_hash'])
+    direct_vm.warp('2027-10-29T10:00:00Z'); registry.commit_evidence(tid,'move_out',manifests())
+    direct_vm.sender=direct_bob; registry.commit_evidence(tid,'move_out',manifests())
+    landlord=registry.get_tenancy(tid)['departure_evidence']['landlord']
+    direct_vm.sender=direct_alice
+    corrected=json.loads(manifests());corrected[0]['sha256']='b'*64
+    registry.commit_evidence(tid,'move_out',json.dumps(corrected))
+    record=registry.get_tenancy(tid)
+    assert record['departure_evidence']['landlord']==landlord
+    assert record['departure_evidence']['tenant']['images'][0]['sha256']=='b'*64
+    assert record['departure_date']=='2027-10-29'
+    direct_vm.warp('2027-12-05T00:00:00Z')
+    with direct_vm.expect_revert('deadline'):registry.commit_evidence(tid,'move_out',manifests())
+
+def test_early_departure_requires_counterparty_and_cannot_extend(registry,create,direct_vm,direct_alice,direct_bob):
+    tid=accept(registry,create,direct_vm,direct_bob)
+    registry.propose_departure(tid,'2026-11-01')
+    with direct_vm.expect_revert('Other party'):registry.acknowledge_departure(tid,'2026-11-01')
+    direct_vm.sender=direct_alice
+    with direct_vm.expect_revert('exact departure'):registry.acknowledge_departure(tid,'2026-11-02')
+    registry.acknowledge_departure(tid,'2026-11-01')
+    assert registry.get_tenancy(tid)['departure_date']=='2026-11-01'
+    with direct_vm.expect_revert('extend'):registry.propose_departure(tid,'2027-01-01')
+
+def test_notice_can_be_registered_without_photos(registry,create,direct_vm,direct_bob):
+    tid=accept(registry,create,direct_vm,direct_bob);direct_vm.warp('2027-10-29T10:00:00Z')
+    registry.submit_notice(tid,'[]')
+    assert registry.get_tenancy(tid)['notice']['claims']==[]
+    assert registry.get_tenancy(tid)['move_out'] is None
+
+def test_positive_notice_requires_snapshotted_expenditure(registry,create,direct_vm,direct_bob):
+    tid=accept(registry,create,direct_vm,direct_bob);direct_vm.warp('2027-10-29T10:00:00Z')
+    claim={'item_id':'floor','claimed_atto':'100','reason':'Carpet replacement for a new large tear.'}
+    with direct_vm.expect_revert('actual expenditure'):registry.submit_notice(tid,json.dumps([claim]))
+    claim.update(expenditure_atto='50',expenditure_reference_url='https://example.org/invoice')
+    registry.submit_notice(tid,json.dumps([claim]))
+    assert registry.get_tenancy(tid)['notice']['claims'][0]['expenditure_sha256']
