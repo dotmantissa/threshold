@@ -19,3 +19,8 @@ it('lets the opposing participant complete a still-active appeal',()=>{
  const html=render({...tenancy,record:{...tenancy.record!,move_out:tenancy.record!.move_in,notice:{claims:[],submitted_at:'2026-01-02'}},escrow:{...tenancy.escrow!,appeal_bond_atto:'10',appellant:tenancy.counterparty_wallet,appeal_deadline:'2026-01-05'},verdict:{status:'DECIDED',appeal:false,release_after:'2026-01-04'}});
  expect(html).toContain('Review the evidence again');vi.useRealTimers();
 });
+it('offers reserve top-ups after departure while the deposit remains funded',()=>{
+ const html=render({...tenancy,role:'landlord',record:{...tenancy.record!,move_out:tenancy.record!.move_in},escrow:{...tenancy.escrow!,reserve_atto:'1000'}});
+ expect(html).toContain('Top up penalty reserve');
+ expect(render({...tenancy,role:'landlord',escrow:{...tenancy.escrow!,reserve_atto:'2000'}})).not.toContain('Top up penalty reserve');
+});
