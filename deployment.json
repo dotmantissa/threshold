@@ -4,24 +4,80 @@
   "signer": "0xBC1399c55538eC034d4Da550C03c34Ae0C357f53",
   "contracts": {
     "tenancy_registry": {
-      "sha256": "602f7ee96d33c4c32c42c8a2d18474031c2eb313e6d2b2495706fdbf732b0fac",
-      "deploy_tx": "0xaab7264adb42db639fc968f4757e40e274fd8bf71564e90bc6b3ed9770e79036",
-      "address": "0xf4F93c5962Df927B342c4057389e50913d08390d"
+      "sha256": "90293b1d5e299f04fe5e63574a9e01c0bc2839bb6f763c70999f2fcf1f9d8054",
+      "deploy_tx": "0x232ccd9ad1bc0f730cbad3f38d6a856028fd773dfd8010951dcc0a47faa3c75c",
+      "address": "0x111A9f88734D0C4040B79A4C1D4e2Bc7267922CD"
     },
     "condition_court": {
-      "sha256": "8c081444881d7c4f9d8313a57187444e14fb51745ff5c67fa343cb8f24061533",
-      "deploy_tx": "0x3c25c37ea022052353af9a710ad1a744743dff39a2b61f96006604b99d1e4bc1",
-      "address": "0xE117b28EB5782f9e647A706fb412BBeb7b3b5D38"
+      "sha256": "e7d0e57dfcf28ad4424211b0bff25c676c9b023eb0457baeadb0ce9224b9e7ec",
+      "deploy_tx": "0xcf103e877e0d853cd4accd6fb4c7b4b6ce95a00770803e7c78c4f8ad958a50c7",
+      "address": "0xaf431725Ec27c577e47AAB22f10F2cA0fbf860D3"
     },
     "deposit_escrow": {
-      "sha256": "365104c8a3c3e06c98ea5ac0c8d1279f9fa6f3f8a4d9229672141ee4ea264b6e",
-      "deploy_tx": "0x575d07bbd2a117d27a3e46e93cb5e409337803bb28c78c6441c3572d5b212e28",
-      "address": "0x07B6336B24d12F34E751Fc00102cFe64F4c00Ec9"
+      "sha256": "fdca416ecfe37e7a37f15ffd7ff8da3ee54c4bb0dabdedcbdd786a2669531ce7",
+      "deploy_tx": "0x765a14c24e9b2308d2de135bf2dbc7b098436e6648e2b2ccbed335e8dcf9e8e2",
+      "address": "0xb1F44D08be4A7e733dDF8aB03B5230b9869AE5be"
     }
   },
   "wiring": {
-    "registry": "0x83d237e113530ad3347254e21288a70c781733c7fb75eb433305c2eb9bfc3735",
-    "court": "0x396affb4232da8ae69fc7992df2b446314c6c3620df206f8c1ad5e2394f698cc"
+    "registry": "0xca7a11b3b09fc11dfeb4c4d1633cc4b0f63fdd7e00534ba81d7a428a4984fa11",
+    "court": "0x296ef7ff01ae06f10742f8f58e5f00a7475113407e3ceab19ec069844fd67de4"
   },
-  "verified_at": "2026-10-29T15:30:51.453Z"
+  "previous": [
+    {
+      "network": "studionet",
+      "rpc": "https://studio.genlayer.com/api",
+      "signer": "0xBC1399c55538eC034d4Da550C03c34Ae0C357f53",
+      "contracts": {
+        "tenancy_registry": {
+          "sha256": "602f7ee96d33c4c32c42c8a2d18474031c2eb313e6d2b2495706fdbf732b0fac",
+          "deploy_tx": "0xaab7264adb42db639fc968f4757e40e274fd8bf71564e90bc6b3ed9770e79036",
+          "address": "0xf4F93c5962Df927B342c4057389e50913d08390d"
+        },
+        "condition_court": {
+          "sha256": "8c081444881d7c4f9d8313a57187444e14fb51745ff5c67fa343cb8f24061533",
+          "deploy_tx": "0x3c25c37ea022052353af9a710ad1a744743dff39a2b61f96006604b99d1e4bc1",
+          "address": "0xE117b28EB5782f9e647A706fb412BBeb7b3b5D38"
+        },
+        "deposit_escrow": {
+          "sha256": "365104c8a3c3e06c98ea5ac0c8d1279f9fa6f3f8a4d9229672141ee4ea264b6e",
+          "deploy_tx": "0x575d07bbd2a117d27a3e46e93cb5e409337803bb28c78c6441c3572d5b212e28",
+          "address": "0x07B6336B24d12F34E751Fc00102cFe64F4c00Ec9"
+        }
+      },
+      "wiring": {
+        "registry": "0x83d237e113530ad3347254e21288a70c781733c7fb75eb433305c2eb9bfc3735",
+        "court": "0x396affb4232da8ae69fc7992df2b446314c6c3620df206f8c1ad5e2394f698cc"
+      },
+      "verified_at": "2026-10-29T15:30:51.453Z"
+    },
+    {
+      "network": "studionet",
+      "rpc": "https://studio.genlayer.com/api",
+      "signer": "0xBC1399c55538eC034d4Da550C03c34Ae0C357f53",
+      "contracts": {
+        "tenancy_registry": {
+          "sha256": "90293b1d5e299f04fe5e63574a9e01c0bc2839bb6f763c70999f2fcf1f9d8054",
+          "deploy_tx": "0x3a23442e412562967b521913b0dfe116955918c1f865602d19f5b9e1903f4f05",
+          "address": "0x437944b57BA062A4d0ca48c47F48851CD71C1427"
+        },
+        "condition_court": {
+          "sha256": "e7d0e57dfcf28ad4424211b0bff25c676c9b023eb0457baeadb0ce9224b9e7ec",
+          "deploy_tx": "0xd1d2586a086cd09eb130b6893e92b6041bc808d2cede6de8c179be4ba82b0873",
+          "address": "0x5E520d24aAce48E00f8b3013e2567884980726D9"
+        },
+        "deposit_escrow": {
+          "sha256": "c9383221908a117a39ebbdc003e020d2063bdd388f739632307557f9de56ac56",
+          "deploy_tx": "0xc1b0eecdb97ef73f2b42d4c5b119431193d5fabb98d39a1f12b20630fbb47f86",
+          "address": "0x130e3F39a929A674406Efb1586aad13aca4aa71e"
+        }
+      },
+      "wiring": {
+        "registry": "0x7487450fb1c2c55753af3d3b72c7db816ceb980218f699a5a2cc18ac2c21b67b",
+        "court": "0xcd3b8b2ceb64c8a6a6e2dabc9f5c1500b4e6bfd0ae1733c98e3c54415cdb6e16"
+      },
+      "verified_at": "2026-10-30T07:58:16.570Z"
+    }
+  ],
+  "verified_at": "2026-10-30T08:41:26.303Z"
 }

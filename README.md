@@ -14,9 +14,9 @@ Sign in with your email. Create a tenancy, add the inventory and published repla
 
 Capture arrival photos by arrival day. The capture flow checks for faces, removes location metadata and lets you review the exact saved image. The other person acknowledges that set. The tenant then places the deposit into escrow, where it stays throughout the tenancy.
 
-At departure, capture the same items from the same angles. The landlord registers an itemised notice. GenLayer validators compare each pair, check the recorded dates and produce a finding with a deduction band. The app shows the evidence beside the finding.
+The agreed end date anchors departure and depreciation; both parties can agree an earlier date without backdating it. Each person can submit and correct a separate departure photo set through day 35. The landlord registers an itemised notice with actual expenditure and a published receipt. GenLayer validators compare each pair, check the recorded dates and produce a finding with a deduction band. The app shows the evidence beside the finding.
 
-Either person can bond a rehearing. A decided verdict has a three day settlement pause. Once that window closes, either person can request release. Every action has a receipt, including actions interrupted by a closed tab.
+Either person can bond a rehearing and either can complete it within three days. Inconclusive attempts preserve a decided original and can be retried within that window. Subjective verdicts have a three day settlement pause, bounded by the fixed resolution deadline. A missing, late or empty notice produces a deterministic zero deduction without fetching evidence. After the end of departure day 35, settlement can proceed even without a verdict, using only supported deductions. Unsigned preparations expire and never lock the other person’s actions. Accepted execution, final execution and completed recipient transfers have separate statuses; both participants can reconcile submitted receipts. Every action has a receipt, including actions interrupted by a closed tab.
 
 There are no sample tenancies or invented verdicts in the app. An empty account starts empty.
 
@@ -26,33 +26,33 @@ Network: GenLayer StudioNet, chain ID 61999.
 
 | Contract | Address | Responsibility |
 | :--- | :--- | :--- |
-| Tenancy registry | `0xf4F93c5962Df927B342c4057389e50913d08390d` | Parties, agreement, inventory, dates and evidence commitments |
-| Condition court | `0xE117b28EB5782f9e647A706fb412BBeb7b3b5D38` | Image comparison, procedure, deduction bands and rehearing |
-| Deposit escrow | `0x07B6336B24d12F34E751Fc00102cFe64F4c00Ec9` | Actual native custody, appeal bonds, penalty reserve and payout instructions |
+| Tenancy registry | `0x111A9f88734D0C4040B79A4C1D4e2Bc7267922CD` | Parties, agreement, inventory, dates and evidence commitments |
+| Condition court | `0xaf431725Ec27c577e47AAB22f10F2cA0fbf860D3` | Image comparison, procedure, deduction bands and rehearing |
+| Deposit escrow | `0xb1F44D08be4A7e733dDF8aB03B5230b9869AE5be` | Native custody, appeal bonds, penalty reserve and external wallet payouts |
 
-Deployment hashes, source fingerprints and wiring receipts are in [deployment.json](deployment.json). All contracts pin a concrete GenVM runner.
+Deployment hashes, source fingerprints and wiring receipts are in [deployment.json](deployment.json). All contracts pin a concrete GenVM runner. Previous addresses remain in that file and existing indexed tenancies retain their original contracts. These immutable legacy escrows cannot acquire the new recovery methods by redeploying.
 
 Studio balances are simulated credits. This deployment does not hold fiat deposits. A stored number never substitutes for an actual payable funding transaction.
 
 ## How a finding becomes a verdict
 
-Each validator fetches the committed image bytes and checks SHA256 before judging. Each item is classified as new damage, pre existing condition, normal wear or undetermined.
+Each validator fetches usable committed images from both participants and checks SHA256 before judging. Bad hashes and unavailable images do not poison the other party’s usable set. Each item is classified as new damage, pre existing condition, normal wear or undetermined.
 
-Validators must agree exactly on item identity, classification, deduction band, bad faith finding, the number of items with new damage and the procedural checks. Explanations can differ. Bands deliberately stay coarse: none, low, medium and high. Deterministic code computes depreciation, claim ceilings and the deposit cap.
+Validators must agree exactly on item identity, classification, deduction band, bad faith and expenditure-support findings, the number of items with new damage and the procedural checks. Explanations can differ. Bands deliberately stay coarse: none, low, medium and high. Deterministic code caps the award by documented actual expenditure, depreciation, the selected band, the claim and the deposit. Bands are conservative agreed ceilings, not estimates of exact legal damages.
 
-Unclear evidence produces `UNDETERMINED`. That holds funds for appeal instead of forcing a deduction. The contract permits one bonded rehearing. If that also remains undetermined, funds stay held; this version has no administrative override. Failed consensus also cannot manufacture a successful verdict.
+Unclear claimed evidence produces `UNDETERMINED` and a zero unsupported deduction. Original reviews can be retried with corrected photos; inconclusive rehearings remain retryable within the bond deadline. Neither can extend the fixed recovery horizon. After it expires, either party can settle without external evidence or a completed review. Failed consensus cannot manufacture a successful finding.
 
 The live image control pair reached consensus as pre existing condition. That proves the image path works. It does not establish stability across varied real damage. The public record is [docs/image-probe.json](docs/image-probe.json).
 
 ## Dates, references and penalties
 
-The current profile covers standard California residential tenancies under Civil Code 1950.5. It uses the ordinary one month deposit ceiling and a notice deadline of 21 calendar days. Small landlord exceptions, other jurisdictions, equipment and vehicle rentals need their own profiles before use.
+The current profile covers standard California residential tenancies under Civil Code 1950.5. It uses the ordinary one month deposit ceiling and a notice deadline of 21 calendar days from the agreed departure date, independent of upload time. Small landlord exceptions, other jurisdictions, equipment and vehicle rentals need their own profiles before use.
 
 The agreed escrow terms produce no deduction for a late or missing registered notice. Registered dates use network UTC dates. Registration proves the app record time, not postal service. The app does not claim every real world late deduction is automatically void.
 
-Useful life comes from HUD Appendix 5D. It is a sample schedule, not a universal legal mandate. Each inventory item also needs a published replacement cost reference and a ceiling both parties accept. Studio credit conversions are agreed by the parties. Unreadable or unrelated references cannot justify an invented price.
+Useful life comes from HUD Appendix 5D. It is a sample schedule, not a universal legal mandate. Each inventory item also needs a published replacement cost reference and a ceiling both parties accept. Reference text and its SHA256 snapshot are part of the complete agreement fingerprint, including parties, money, dates, jurisdiction, clause and inventory. Receipt text is snapshotted when a positive claim is submitted; later page changes cannot alter either reference. Studio credit conversions are agreed by the parties. Unreadable or unrelated references cannot justify an invented price.
 
-A landlord can fund a separate reserve equal to twice the deposit before departure. An upheld tenant appeal with affirmative evidence of bad faith can trigger that multiplier. A mistake, rejected claim or late notice alone is not bad faith. A penalty cannot spend another tenancy’s funds. If the required reserve is insufficient, settlement remains blocked. The reserve is optional in this prototype, so both people should understand that limit before funding.
+A landlord can fund and top up a separate reserve up to twice the deposit only after the accepted arrival and deposit funding, including after departure. An upheld tenant appeal with affirmative evidence of bad faith can trigger that multiplier. A mistake, rejected claim or late notice alone is not bad faith. A penalty cannot spend another tenancy’s funds. Settlement releases the principal and available penalty reserve. Any unpaid penalty is recorded as a separate debt and can be paid after settlement; it cannot consume another tenancy’s balance or block principal release. The reserve is optional, so collection of an unpaid penalty is not guaranteed.
 
 Sources: [California Courts](https://selfhelp.courts.ca.gov/guide-security-deposits) and [HUD guidance](https://www.hud.gov/sites/documents/HSG-06-01GHBGUID.PDF).
 
@@ -95,9 +95,9 @@ Direct tests cover every written contract, including the image and sandbox probe
 
 Real email authentication and the authenticated empty dashboard have also been verified.
 
-The live smoke creates two separate test accounts and uses the real Studio faucet. It verifies deployed source, schemas, registration, acceptance, immutable arrival evidence, acknowledgement and native custody. Private test accounts remain ignored. Departure and payout checks are time gated; direct tests cover them, but the complete live settlement lifecycle has not yet been verified.
+The complete live smoke passed with two separate test accounts and the real Studio faucet. It verified finalized execution, source equality, snapshots, agreement, arrival, native custody, mutual early departure, competing departure sets including an invalid opposing hash, a zero-claim verdict and settlement. It verified exact finalized credited external transfers and recipient balance increases of 1,000 and 2,000 atto, with escrow decreasing by 3,000 atto. The receipt and balance proof is in [docs/studionet-smoke.json](docs/studionet-smoke.json). Private accounts remain ignored. Five-validator simulator tests exercise adversarial deadlines, abandoned bonds, invalid evidence, rehearing recovery and unpaid penalties with real SDK cross-contract reads and an inline sandbox shim; they are not actual GenVM execution or independent external models. The live zero-claim lifecycle does not establish varied real-damage or live time-expiry consensus.
 
-To deploy fresh contracts, set your deployment key locally and run `npm run contracts:deploy`. The script saves receipts as it progresses and resumes an interrupted deployment. Keep the resulting public `deployment.json` with the application.
+To deploy a new immutable version, set your deployment key locally and run `npm run contracts:deploy -- --fresh`. Resume an interrupted deployment without `--fresh`. The script saves receipts as it progresses and resumes an interrupted deployment. Keep the resulting public `deployment.json` with the application.
 
 Deploy the app with Vercel using Node 22. Configure Privy, Neon and Blob environment values on the hosting platform. Set `APP_URL` to the public application origin. Run the database migration before accepting users. Keep the Privy secret, database URL, storage token and deployment key out of Git and browser bundles.
 

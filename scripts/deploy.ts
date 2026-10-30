@@ -7,16 +7,18 @@ import {readFileSync,writeFileSync,existsSync,mkdirSync} from 'node:fs';
 import {createHash} from 'node:crypto';
 import {executionSucceeded,type NetworkReceipt} from '../src/lib/receipt';
 config({path:'.env.local',quiet:true});
+const signerEnv=process.argv.find(arg=>arg.startsWith('--signer-env='))?.slice('--signer-env='.length);
+if(signerEnv)config({path:signerEnv,quiet:true,override:true});
 if(!process.env.GENLAYER_PRIVATE_KEY)throw Error('GENLAYER_PRIVATE_KEY is required');
 const client=createClient({chain:studionet,account:createAccount(process.env.GENLAYER_PRIVATE_KEY as `0x${string}`)});
 type Entry={address?:`0x${string}`;deploy_tx?:`0x${string}`;sha256:string};
-type Deployment={network:string;rpc:string;signer:string;contracts:Record<string,Entry>;wiring:Record<string,`0x${string}`>;verified_at?:string};
+type Deployment={network:string;rpc:string;signer:string;contracts:Record<string,Entry>;wiring:Record<string,`0x${string}`>;verified_at?:string;previous?:Deployment[]};
 const path='deployment.json';
 let state:Deployment=existsSync(path)?JSON.parse(readFileSync(path,'utf8')):{network:'studionet',rpc:'https://studio.genlayer.com/api',signer:client.account!.address,contracts:{},wiring:{}};
-if(process.argv.includes('--fresh')&&existsSync(path)){mkdirSync('docs/deployments',{recursive:true});writeFileSync('docs/deployments/'+Date.now()+'.json',JSON.stringify(state,null,2));state={...state,contracts:{},wiring:{}}}
+if(process.argv.includes('--fresh')&&existsSync(path)){state={network:state.network,rpc:state.rpc,signer:client.account!.address,contracts:{},wiring:{},previous:[...(state.previous||[]),{...state,previous:undefined}]};}
 const save=()=>writeFileSync(path,JSON.stringify(state,null,2)+'\n');
 async function wait(hash:`0x${string}`,name:string){
- const receipt=await client.waitForTransactionReceipt({hash:hash as Parameters<typeof client.waitForTransactionReceipt>[0]["hash"],status:TransactionStatus.ACCEPTED,interval:5000,retries:60});
+ const receipt=await client.waitForTransactionReceipt({hash:hash as Parameters<typeof client.waitForTransactionReceipt>[0]["hash"],status:TransactionStatus.FINALIZED,interval:5000,retries:60});
  mkdirSync('.storage/receipts',{recursive:true});writeFileSync('.storage/receipts/'+name+'.json',JSON.stringify(receipt,null,2));
  if(!executionSucceeded(receipt as NetworkReceipt))throw Error('Execution failed for '+name+'; inspect restricted local receipt');
  return receipt;

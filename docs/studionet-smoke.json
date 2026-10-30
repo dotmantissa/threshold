@@ -1,32 +1,205 @@
 {
   "network": "studionet",
+  "contracts": {
+    "registry": "0x111A9f88734D0C4040B79A4C1D4e2Bc7267922CD",
+    "court": "0xaf431725Ec27c577e47AAB22f10F2cA0fbf860D3",
+    "escrow": "0xb1F44D08be4A7e733dDF8aB03B5230b9869AE5be"
+  },
+  "previous": [
+    {
+      "network": "studionet",
+      "contracts": {
+        "registry": "0x437944b57BA062A4d0ca48c47F48851CD71C1427",
+        "court": "0x5E520d24aAce48E00f8b3013e2567884980726D9",
+        "escrow": "0x130e3F39a929A674406Efb1586aad13aca4aa71e"
+      },
+      "previous": [
+        {
+          "network": "studionet",
+          "checks": [
+            "deployed source equality",
+            "contract schema",
+            "real Studio faucet",
+            "two party registration",
+            "agreement acceptance",
+            "immutable arrival commitment",
+            "other party acknowledgement",
+            "native penalty reserve",
+            "native deposit custody",
+            "wired court view"
+          ],
+          "funded": true,
+          "register": "0x0bbb0ae4348b27791f6a01e2474a5c6c9b42cddc98807dcac6548818d930b1bf",
+          "tenancy_id": "1",
+          "accept": "0x51db3881ca503ee9cce48ee132219a19c57423c8814492e940ee7a6a5460e29c",
+          "arrival": "0x6b77d3532828da54f1967479db0c17863a3dfe474d024494989022ef1e80ba79",
+          "acknowledge": "0x0a7658ec734c09e99bac66d14259e688aa765b111b6a4152a3cbd064717ab54a",
+          "reserve": "0xb5cbde9a0f52e6f47c23367ad2ba9e10caec0eca1d28d3d50ac5647ae8cd4cc9",
+          "deposit": "0xb93ba5d29dd90cd2a1899ac20217d79110834c038e2a7abb2d43661dd35ec863",
+          "account": {
+            "appeal_bond_atto": "0",
+            "appellant": "",
+            "deposit_atto": "10000000000000000000",
+            "funded_at": "2026-10-29T16:02:19.763306+00:00",
+            "reserve_atto": "20000000000000000000",
+            "settled": false
+          },
+          "verified_at": "2026-10-29T16:02:35.324Z"
+        }
+      ],
+      "checks": [],
+      "funded": true,
+      "register": "0x7072eb396089c6af18345b71057cf020ad07d39e45d270b9d28a8b165373f521",
+      "tenancy_id": "1",
+      "accept": "0x9258481a9ede832f1a5b8530d6824435ff195a30bd37ea11707b48e918d492a6",
+      "arrival": "0xf7064e7b1ea5304938308b4cb90e0a7f9a1196ad2109338f18e719ff75381b97",
+      "acknowledge": "0x1e54ae4242400dcff514625b0945e794ed03c989cc1db44a6a9461ddcf203ed6",
+      "deposit": "0xec023f54256df62f9e93ee4f1aa5bfa66a6291db7f226398a06192f754fdfede",
+      "reserve": "0x78697f6b972cab08c4f52df397720affa03e117e3f8c2064aecfb56e57245210",
+      "departure_date": "2026-10-30",
+      "early_proposal": "0x95734dcd0186fac141470b30985660dbfa9b6c8892727b75cbe18b71327017ad",
+      "early_acknowledgement": "0x5ab24681a0277656133696ee7ebe0087135641d85d814a16570c5ace5ef152f8",
+      "departure_tenant": "0x85ab9d96402480ed8be6bef403c5e49aa9aee3fc5643d6366eadca9984628497",
+      "departure_landlord_invalid": "0x6d007da458d6bc2136f3854a3ac3c304d911767049f8f5d937e765d980f1998b",
+      "notice": "0x89102a8a60188f1325083c0f9d9a47afb33bf130410dc11770a8abf047e5b00e",
+      "adjudicate": "0x163cb398a5eaa356815a282031bb38aba4c37281f9b16b643091d55e9f38daf8",
+      "balances_before": {
+        "tenant": "1989999999999999999000",
+        "landlord": "1979999999999999998000",
+        "escrow": "3000"
+      },
+      "settle": "0x480ecf76e9a2953853c9b467292ff7cb43846bb7b2b0772d8fbec3e26714a324",
+      "payout_failure": {
+        "settlement": "0x480ecf76e9a2953853c9b467292ff7cb43846bb7b2b0772d8fbec3e26714a324",
+        "reason": "Native IC messages addressed to EOA wallets failed with contract_not_found_handler. Corrected with EVM external transfers in the subsequent deployment.",
+        "tenant_transfer": "0x8f06dc1bb0683c327083a3a214c684d17561d452357ebc0f8552e382c16067ef",
+        "landlord_transfer": "0x05b392afa914bfdfac6b93248aacec250a4ba1997fd0b15c73dd7aaaba676254",
+        "tenant_delta_atto": "0",
+        "landlord_delta_atto": "0",
+        "escrow_debit_atto": "3000",
+        "recipient_payouts_completed": false
+      }
+    }
+  ],
   "checks": [
-    "deployed source equality",
-    "contract schema",
-    "real Studio faucet",
-    "two party registration",
-    "agreement acceptance",
-    "immutable arrival commitment",
-    "other party acknowledgement",
-    "native penalty reserve",
-    "native deposit custody",
-    "wired court view"
+    "live source equality and SDK schema",
+    "finalized successful registration and wiring",
+    "immutable replacement reference snapshot",
+    "complete agreement acceptance",
+    "arrival acknowledgement",
+    "native deposit and reserve custody",
+    "mutually agreed early departure",
+    "independent competing departure sets",
+    "invalid opposing photo cannot block zero-claim verdict",
+    "deterministic decided verdict without evidence fetch",
+    "finalized settlement",
+    "exact finalized credited external transfers",
+    "tenant and landlord balance increases",
+    "escrow balance decreases by complete payout"
   ],
   "funded": true,
-  "register": "0x0bbb0ae4348b27791f6a01e2474a5c6c9b42cddc98807dcac6548818d930b1bf",
+  "register": "0x741a35f305764942e2e7438dc38f671210754d907e21d3abcfc4543bffed90e1",
   "tenancy_id": "1",
-  "accept": "0x51db3881ca503ee9cce48ee132219a19c57423c8814492e940ee7a6a5460e29c",
-  "arrival": "0x6b77d3532828da54f1967479db0c17863a3dfe474d024494989022ef1e80ba79",
-  "acknowledge": "0x0a7658ec734c09e99bac66d14259e688aa765b111b6a4152a3cbd064717ab54a",
-  "reserve": "0xb5cbde9a0f52e6f47c23367ad2ba9e10caec0eca1d28d3d50ac5647ae8cd4cc9",
-  "deposit": "0xb93ba5d29dd90cd2a1899ac20217d79110834c038e2a7abb2d43661dd35ec863",
+  "accept": "0xc0aa3aed930a8bc70f9ad399cf6d5d5f494472e4aa09ea00dfb123cb37524cd4",
+  "arrival": "0x354ad01179ea04eee544c742edbedabc63cdef9443723326dfe8d89922c5107f",
+  "acknowledge": "0xa08e167238f2a9c1a541439067bf7d2137441cdf71b8f60a1216f35accaa7f47",
+  "deposit": "0x5ad2cf8b776ab4c1f4509c70c647df71bc6d25d21f628e7c3a3105d1a8722ac2",
+  "reserve": "0xef17771e11faf99f7be9375aa288f4ea3b00ebdd24b0a19c40f84a7eaed73317",
+  "departure_date": "2026-10-30",
+  "early_proposal": "0x287ac8d0fb6a447a19daf5cc3a7149cd62df20cda9b4c121e3bf7a8d4ab7c130",
+  "early_acknowledgement": "0xe6e4cb2122167a05dfa899272d096e5fdd2df1508a36f6c51f4707071909ab16",
+  "departure_tenant": "0xfb06b0947a60d62d1dc0782e670b17241ea2ae00ce18fb994bba8f28e6bd3a1c",
+  "departure_landlord_invalid": "0x7dad1cf9eafd7f9bfa86f585557448269549b5878aec6dcaba225580df3a6682",
+  "notice": "0x834b499a91bc40896822071d0ca560b28ab831c3c073d7c6136c52ef038e0b78",
+  "adjudicate": "0x08a82a64fe136d64fae59793e065bb0675252fd9e44b8ec60d2db6094a20f735",
+  "balances_before": {
+    "tenant": "2989999999999999998007",
+    "landlord": "2979999999999999996000",
+    "escrow": "3000"
+  },
+  "settle": "0x0469f3d8021c4ac8c1408feb99ecbee5810f9b25e267d980228b11777973fa27",
+  "balances_after": {
+    "tenant": "2989999999999999999007",
+    "landlord": "2979999999999999998000",
+    "escrow": "0"
+  },
   "account": {
     "appeal_bond_atto": "0",
+    "appeal_expired": false,
     "appellant": "",
-    "deposit_atto": "10000000000000000000",
-    "funded_at": "2026-10-29T16:02:19.763306+00:00",
-    "reserve_atto": "20000000000000000000",
-    "settled": false
+    "deposit_atto": "1000",
+    "funded_at": "2026-10-30T08:47:47.361442+00:00",
+    "landlord_payout_atto": "2000",
+    "penalty_atto": "0",
+    "penalty_due_atto": "0",
+    "penalty_paid_atto": "0",
+    "reserve_atto": "2000",
+    "resolution": "COURT_VERDICT",
+    "settled": true,
+    "settled_at": "2026-10-30T08:53:44.463190+00:00",
+    "tenant_payout_atto": "1000",
+    "transfers": "EMITTED_FOR_FINALIZATION"
   },
-  "verified_at": "2026-10-29T16:02:35.324Z"
+  "verdict": {
+    "appeal": false,
+    "bad_faith": false,
+    "decided_at": "2026-10-30T08:52:59.434061+00:00",
+    "deduction_atto": "0",
+    "items": [
+      {
+        "bad_faith": false,
+        "band": "NONE",
+        "band_lower_atto": "0",
+        "band_upper_atto": "0",
+        "classification": "NO_CLAIM",
+        "deduction_atto": "0",
+        "depreciated_atto": "800",
+        "expense_supported": false,
+        "item_id": "integration-carpet",
+        "reason": "No timely positive claim; the permitted deduction is zero."
+      }
+    ],
+    "lifespan_reference_url": "https://www.hud.gov/sites/documents/HSG-06-01GHBGUID.PDF",
+    "new_damage_count": 0,
+    "penalty_multiplier": 0,
+    "procedure": {
+      "arrival_acknowledged": true,
+      "deadline": "2026-11-20",
+      "deposit_within_limit": true,
+      "notice_registered": true,
+      "notice_scope": "App registration proves record time, not postal service",
+      "notice_timely": true,
+      "statute_url": "https://selfhelp.courts.ca.gov/guide-security-deposits"
+    },
+    "procedure_only": true,
+    "recovery_after": "2026-12-05T00:00:00+00:00",
+    "release_after": "2026-10-30T08:52:59.434061+00:00",
+    "status": "DECIDED",
+    "tenancy_id": "1"
+  },
+  "transfers": [
+    {
+      "hash": "0xd733aa6233c83e4be87530c6030cf65b2f3d9d994863e7f77acb27b464ca2c7b",
+      "sender": "0xb1F44D08be4A7e733dDF8aB03B5230b9869AE5be",
+      "recipient": "0xDd64165797d9CF8444eED98bf81DBC1d1C834EBe",
+      "amount": "2000",
+      "type": 0,
+      "status": "FINALIZED",
+      "triggered_by": "0x0469f3d8021c4ac8c1408feb99ecbee5810f9b25e267d980228b11777973fa27",
+      "triggered_on": "finalized",
+      "value_credited": true
+    },
+    {
+      "hash": "0x406775a61978c960112dbf1a4122b76f57547757d65c20f4323c1415ffd65abd",
+      "sender": "0xb1F44D08be4A7e733dDF8aB03B5230b9869AE5be",
+      "recipient": "0x9515e25c2ee97261eA2c0477938c176E09466aB6",
+      "amount": "1000",
+      "type": 0,
+      "status": "FINALIZED",
+      "triggered_by": "0x0469f3d8021c4ac8c1408feb99ecbee5810f9b25e267d980228b11777973fa27",
+      "triggered_on": "finalized",
+      "value_credited": true
+    }
+  ],
+  "verified_at": "2026-10-30T08:54:29.719Z"
 }
