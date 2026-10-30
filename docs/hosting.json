@@ -2,13 +2,31 @@
   "origin": "https://threshold-peace.vercel.app",
   "network": "studionet",
   "storage": "vercel",
+  "contracts": {
+    "tenancy_registry": {
+      "sha256": "90293b1d5e299f04fe5e63574a9e01c0bc2839bb6f763c70999f2fcf1f9d8054",
+      "deploy_tx": "0x232ccd9ad1bc0f730cbad3f38d6a856028fd773dfd8010951dcc0a47faa3c75c",
+      "address": "0x111A9f88734D0C4040B79A4C1D4e2Bc7267922CD"
+    },
+    "condition_court": {
+      "sha256": "e7d0e57dfcf28ad4424211b0bff25c676c9b023eb0457baeadb0ce9224b9e7ec",
+      "deploy_tx": "0xcf103e877e0d853cd4accd6fb4c7b4b6ce95a00770803e7c78c4f8ad958a50c7",
+      "address": "0xaf431725Ec27c577e47AAB22f10F2cA0fbf860D3"
+    },
+    "deposit_escrow": {
+      "sha256": "fdca416ecfe37e7a37f15ffd7ff8da3ee54c4bb0dabdedcbdd786a2669531ce7",
+      "deploy_tx": "0x765a14c24e9b2308d2de135bf2dbc7b098436e6648e2b2ccbed335e8dcf9e8e2",
+      "address": "0xb1F44D08be4A7e733dDF8aB03B5230b9869AE5be"
+    }
+  },
+  "deployment_verified_at": "2026-10-30T08:41:26.303Z",
   "checks": [
     "public application access",
-    "deployed contract addresses",
+    "finalized deployed contract addresses and source fingerprints",
     "persistent object storage configuration",
     "anonymous access rejected",
     "real authenticated account API",
     "unrelated tenancy hidden"
   ],
-  "verified_at": "2026-10-29T16:53:47.642Z"
+  "verified_at": "2026-10-30T08:57:58.382Z"
 }
